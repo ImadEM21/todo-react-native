@@ -5,12 +5,13 @@ import Heading from './components/Heading';
 import Input from './components/Input';
 import Button from './components/Button';
 import TodoList from './components/TodoList';
+import TapBar from './components/TapBar';
 
 export default function App() {
   const [inputValue, setInputValue] = useState("");
   const [todos, setTodos] = useState([]);
   const [todoIndex, setTodoIndex] = useState(0);
-  const [type, setType] = useState("all");
+  const [type, setType] = useState("All");
 
   const submitToDo = () => {
     if (inputValue.match(/^\s*$/)) {
@@ -42,10 +43,10 @@ export default function App() {
       <ScrollView keyboardShouldPersistTaps="always" style={styles.content}>
         <Heading />
         <Input inputValue={inputValue} setInputValue={setInputValue} submitToDo={submitToDo} />
-        <TodoList todos={todos} updateTodo={updateTodo} deleteTodo={deleteTodo} />
+        <TodoList todos={todos} updateTodo={updateTodo} deleteTodo={deleteTodo} type={type} />
         <Button submitToDo={submitToDo} />
       </ScrollView>
-      <StatusBar style="auto" />
+      <TapBar type={type} setType={setType} />
     </View>
   );
 }
