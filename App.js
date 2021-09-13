@@ -1,11 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
+import Heading from './components/Heading';
+import Input from './components/Input';
+import Button from './components/Button';
+import TodoList from './components/TodoList';
 
 export default function App() {
+  const [inputValue, setInputValue] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [todoIndex, setTodoIndex] = useState(0);
+  const [type, setType] = useState("all");
+
+  const submitToDo = () => {
+    if (inputValue.match(/^\s*$/)) {
+        return;
+    }
+    const todo = {
+        title: inputValue,
+        todoIndex,
+        complete: false
+    };
+    setTodoIndex(prev => prev + 1);
+    setTodos(prevState => [...prevState, todo]);
+    setInputValue("");
+  };
+
+  const updateTodo = (index) => {
+    let newTodoList = [...todos];
+    newTodoList[index].complete = !newTodoList[index].complete
+    setTodos(newTodoList);
+  };
+
+  const deleteTodo = (title) => {
+    const newTodoList = todos.filter(todo => todo.title !== title);
+    setTodos(newTodoList);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <ScrollView keyboardShouldPersistTaps="always" style={styles.content}>
+        <Heading />
+        <Input inputValue={inputValue} setInputValue={setInputValue} submitToDo={submitToDo} />
+        <TodoList todos={todos} updateTodo={updateTodo} deleteTodo={deleteTodo} />
+        <Button submitToDo={submitToDo} />
+      </ScrollView>
       <StatusBar style="auto" />
     </View>
   );
@@ -14,8 +53,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#f5f5f5",
+  },
+  content: {
+    flex: 1,
+    paddingTop: 60
   },
 });
